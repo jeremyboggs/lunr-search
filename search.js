@@ -1,7 +1,7 @@
 var promises = [],
     searchQuery = window.location.search.substring(1);
 
-var jsonFiles = ['/search_index.json','/corpus.json'];
+var jsonFiles = ['search_index.json','corpus.json'];
 
 // Loop over JSON files, make a XML Http Request, and push result to the `promises` array.
 jsonFiles.forEach(function(f) {
