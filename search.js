@@ -25,7 +25,7 @@ Promise.all(promises).then(function(values) {
 
 
 // --- Helper Functions ---
-//
+
 // Displays search results
 function displaySearchResults(results, docs, search_container) {
     var search_results= document.getElementById(search_container);
@@ -64,27 +64,27 @@ function resultSnippet(doc) {
         p1 = document.createElement('p'),
         h4 = document.createElement('h4')
 
+    publicationDate = '';
+    if (publicationDate = doc.date) {
+        publicationDate = publicationDate.split(' ')[0] + " EST"; // Get YYYY-MM-DD
+        publicationDate = new Date(publicationDate);
+        var options = { year: 'numeric', month: 'long', day: 'numeric' };
+        console.log(publicationDate.toLocaleString('en-US', options));
+    }
+
     a.dataset.field = 'title';
     let slug = doc.id.split('-')
-    console.log(slug, doc);
     a.href;
     if (doc.layout == 'post'){
         a.href = '/' + slug[0] + '/' + slug[1] + '/' + slug[2] + '/' + doc.url;
     } else  {
         a.href = '/' + doc.layout + '/' + doc.url;
     }
-    console.log(a.href);
-    //   /:year/: month /: day /: title /
-    // if (doc.categories !== null){
-    //     doc.categories.forEach( (cat)=>{
-    //         a.href += '/'+ cat;
-    //     });
-    // }
-    // a.href += '/' + doc.url;
+ 
     a.textContent = doc.title;
 
     p1.dataset.field = 'date';
-    p1.textContent = 'author: '+ doc.author + ' / categories: ' + doc.categories + ' / published: ' + moment(doc.date, 'YYYY-MM-DD').format("MMMM Do YYYY");
+    p1.textContent = 'author: '+ doc.author + ' / categories: ' + doc.categories + ' / published: ' + publicationDate;
 
     h4.dataset.field = 'content';
     h4.textContent = doc.content;
@@ -136,7 +136,7 @@ function returnQueryArray(query_string) {
 }
 
 // Builds a Lunr query string from an array.
-function buildLunrQueryString(queryString) {
+function buildLunrQueryString(queryString, searchInputName="keywords") {
     var queryArray = new Array(),
         LunrQueryString = '',
         vars = returnQueryArray(queryString);
@@ -145,7 +145,7 @@ function buildLunrQueryString(queryString) {
         for (var key in vars) {
             value = vars[key];
             if (value != '') {
-                if (key == 'keywords') {
+                if (key == searchInputName) {
                     termsArray = value.split(' ');
                     queryVariable = '+'+termsArray.join(' +');
                 } else {
@@ -202,7 +202,6 @@ function wrapTerms(element, matches) {
         range.setStart(node, rangeStart)
         range.setEnd(node, rangeEnd)
         range.surroundContents(tag)
-        console.log(range)
         index = match[0] + match[1]
 
         // the next node will now actually be the text we just wrapped, so
